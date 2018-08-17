@@ -2,12 +2,13 @@ import bs4
 import requests
 import os
 
+# Получаем данные с сайта
 def get_html(url):
     r = requests.get(url)
     return r.text
 
 
-# проверяем наличие файла , если он есть - удаляем.
+# Проверяем наличие файла , если он есть - удаляем.
 def check_file():
     try:
         os.remove("proxies.txt")
@@ -15,13 +16,13 @@ def check_file():
         pass
 
     
-# записываем наши прокси в текстовый файл
+# Записываем наши прокси в текстовый файл
 def write(data):
     with open("proxies.txt", "a+") as f:
         f.write(data + "\n")
 
         
-# получение всех ip, в ads ~200 айпишников . При первом запросе они сразу все загружаются.
+# Получение всех ip, в ads ~200 айпишников . При первом запросе к сайту они сразу все загружаются.
 def get_page_data(html):
     soup = bs4.BeautifulSoup(html, "lxml")
 
@@ -37,11 +38,11 @@ def get_page_data(html):
         except:
             port = ""
             
-        # формируем полный адрес и вызываем функцию записи
+        # Формируем полный адрес и вызываем функцию записи
         data = str(ip) + ":" + str(port)
         write(data)
 
-
+        
 def main():
     url = "https://www.us-proxy.org/"
     check_file()
