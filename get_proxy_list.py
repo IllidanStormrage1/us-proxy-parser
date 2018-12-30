@@ -1,20 +1,11 @@
 import bs4
 import requests
-import os
 
 
 def get_html(url):
     '''Получаем данные с сайта'''
     r = requests.get(url)
     return r.text
-
-
-def check_file():
-    '''Проверяем наличие файла , если он есть - удаляем'''
-    try:
-        os.remove("proxies.txt")
-    except Exception as error:
-        print(error)
 
 
 def write(data_set):
@@ -46,7 +37,6 @@ def get_page_data(html):
 
 def main():
     url = "https://www.us-proxy.org/"
-    check_file()
     get_page_data(get_html(url))
     write(data_set)
 
