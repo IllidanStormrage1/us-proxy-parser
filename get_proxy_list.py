@@ -2,51 +2,53 @@ import bs4
 import requests
 import os
 
-# Получаем данные с сайта
+
 def get_html(url):
+    '''Получаем данные с сайта'''
     r = requests.get(url)
     return r.text
 
 
-# Проверяем наличие файла , если он есть - удаляем.
 def check_file():
+    '''Проверяем наличие файла , если он есть - удаляем'''
     try:
         os.remove("proxies.txt")
-    except:
-        pass
+    except Exception as error:
+        print(error)
 
-    
-# Записываем наши прокси в текстовый файл
-def write(data):
+
+def write(data_set):
+    '''Записываем наши прокси в текстовый файл'''
     with open("proxies.txt", "a+") as f:
-        f.write(data + "\n")
+        for i in data_set:
+            f.write(i + '\n')
 
-        
-# Получение всех ip, в ads ~200 айпишников . При первом запросе к сайту они сразу все загружаются.
+
 def get_page_data(html):
+    global data_set
+    '''Получение всех ip, в ads ~200 айпишников'''
     soup = bs4.BeautifulSoup(html, "lxml")
 
     ads = soup.find("table").find("tbody").find_all("tr")
+    data_set = []
 
     for ad in ads:
         try:
             ip = ad.find_all("td")[0].text
-        except:
-            ip = ""
-        try:
             port = ad.find_all("td")[1].text
-        except:
-            port = ""
-            
+        except Exception as error:
+            print(error)
+
         # Формируем полный адрес и вызываем функцию записи
         data = str(ip) + ":" + str(port)
-        write(data)
+        data_set.append(data)
 
-        
+
 def main():
     url = "https://www.us-proxy.org/"
     check_file()
     get_page_data(get_html(url))
+    write(data_set)
 
 
 if __name__ == "__main__":
