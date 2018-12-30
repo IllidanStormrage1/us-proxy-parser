@@ -16,10 +16,9 @@ def write(data_set):
 
 
 def get_page_data(html):
+    '''Получение всех ip'''
     global data_set
-    '''Получение всех ip, в ads ~200 айпишников'''
     soup = bs4.BeautifulSoup(html, "lxml")
-
     ads = soup.find("table").find("tbody").find_all("tr")
     data_set = []
 
